@@ -1,11 +1,13 @@
 // ==UserScript==
 // @name         Flex usability
 // @namespace    http://tampermonkey.net/
-// @version      0.2.2
+// @version      0.3
 // @description  try to take over the world!
 // @author       You
 // @match        https://prowand.pro-unlimited.com/worker/standard/billing/billingedit/cntrl_time_create_edit_hourly-*.html?reqId*
 // @grant        none
+// @updateUrl    https://rawgit.com/TimDG/Flex-tool/master/flex.js
+// @downloadUrl  https://rawgit.com/TimDG/Flex-tool/master/flex.js
 // ==/UserScript==
 
 

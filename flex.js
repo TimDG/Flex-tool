@@ -1,7 +1,7 @@
 // ==UserScript==
 // @name         Flex usability
 // @namespace    http://tampermonkey.net/
-// @version      0.3
+// @version      0.2.3
 // @description  try to take over the world!
 // @author       You
 // @match        https://prowand.pro-unlimited.com/worker/standard/billing/billingedit/cntrl_time_create_edit_hourly-*.html?reqId*

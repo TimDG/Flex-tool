@@ -1,7 +1,7 @@
 // ==UserScript==
 // @name         Flex usability
 // @namespace    http://tampermonkey.net/
-// @version      0.2.3
+// @version      0.3.0
 // @description  try to take over the world!
 // @author       You
 // @match        https://prowand.pro-unlimited.com/worker/standard/billing/billingedit/cntrl_time_create_edit_hourly-*.html?reqId*
@@ -56,7 +56,7 @@
         .filter(':odd')
         .css({"background-color": "#DDDDDD"});
 
-    var dateTable = $("<table id='elcSolDateTable'>").insertAfter("table.header_supplier")
+    var dateTable = $("<table id='elcSolDateTable'>").insertAfter("table:first")
         .css("width", "250px")
         .css("position", "fixed")
         .css("left", "50px")

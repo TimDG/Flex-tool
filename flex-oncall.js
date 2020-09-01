@@ -1,7 +1,7 @@
 // ==UserScript==
 // @name         Flex on-call usability
 // @namespace    http://tampermonkey.net/
-// @version      0.1.0
+// @version      0.1.1
 // @description  try to take over the world!
 // @author       You
 // @match        https://prowand.pro-unlimited.com/worker/standard/billing/billingedit/cntrl_time_create_edit_daily-*.html?*
@@ -60,7 +60,7 @@
     }
 
     function createDateTable() {
-        var dateTable = $("<table id='elcSolDateTable'>").insertAfter("table.header_supplier")
+        var dateTable = $("<table id='elcSolDateTable'>").insertAfter("table:first")
             .css("width", "250px")
             .css("position", "fixed")
             .css("left", "50px")

@@ -28,6 +28,10 @@
     function isSaturday(date) {
         return date.getDay() === 6;
     }
+    
+    $("input[value=Submit]").click(function() {
+     return confirm("I know that I use an external script to fill in my timesheet and have verified that it's correct.");
+    });
 
     $('[id^=billingDtls]')
         .css({'margin-bottom': '10px'})

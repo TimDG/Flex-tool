@@ -158,7 +158,7 @@
 
         //Shift
         var $shift = $day.find('select[id^=billingDetailItems]');
-        $shift.val('Day Shift');
+        $shift.val('Day Shift (8am - 4pm)');
     }
 
     var logDefaults = function () {

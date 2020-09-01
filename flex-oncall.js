@@ -60,7 +60,7 @@
     }
 
     function createDateTable() {
-        var dateTable = $("<table id='elcSolDateTable'>").insertAfter("table.header_supplier")
+        var dateTable = $("<table id='elcSolDateTable'>").insertAfter("table:first")
             .css("width", "250px")
             .css("position", "fixed")
             .css("left", "50px")

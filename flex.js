@@ -1,7 +1,7 @@
 // ==UserScript==
 // @name         Flex usability
 // @namespace    http://tampermonkey.net/
-// @version      0.3.0
+// @version      0.3
 // @description  try to take over the world!
 // @author       You
 // @match        https://prowand.pro-unlimited.com/worker/standard/billing/billingedit/cntrl_time_create_edit_hourly-*.html?reqId*
@@ -106,10 +106,10 @@
 
         $("<a>").text(date.toLocaleString("en", {day: "2-digit"}))
             .attr("href", "#" + date.toLocaleString("en", {
-                    day: "2-digit",
-                    month: "2-digit",
-                    year: "numeric"
-                }).replace(/\//g, ''))
+                day: "2-digit",
+                month: "2-digit",
+                year: "numeric"
+            }).replace(/\//g, ''))
             .attr("data-date", date.toLocaleString("nl", {
                 month: "2-digit",
                 day: "2-digit",
@@ -145,7 +145,7 @@
             //Sunday
             $shiftNameSelect.val("OT 150%");
         } else {
-            $shiftNameSelect.val("Day Shift");
+            $shiftNameSelect.val("Day Shift (8am - 4pm)");
         }
 
         //Hour total
@@ -155,6 +155,10 @@
         var $wbs = $day.find('select[id^=cf]');
         var wbsVal = $wbs.find(':last-child').val();
         $wbs.val(wbsVal);
+
+        //Shift
+        var $shift = $day.find('select[id^=billingDetailItems]');
+        $shift.val('Day Shift');
     }
 
     var logDefaults = function () {

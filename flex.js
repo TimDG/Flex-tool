@@ -1,18 +1,20 @@
 // ==UserScript==
 // @name         Flex usability
 // @namespace    http://tampermonkey.net/
-// @version      0.3.2
-// @description  try to take over the world!
+// @version      0.4.0
+// @description  Try to make flex usable.
 // @author       You
 // @match        https://prowand.pro-unlimited.com/worker/standard/billing/billingedit/cntrl_time_create_edit_hourly-*.html?reqId*
 // @grant        none
-// @updateUrl    https://cdn.jsdelivr.net/gh/TimDG/Flex-tool@master/flex.js
-// @downloadUrl  https://cdn.jsdelivr.net/gh/TimDG/Flex-tool@master/flex.js
+// @updateUrl    https://rawgit.com/TimDG/Flex-tool/master/flex.js
+// @downloadUrl  https://rawgit.com/TimDG/Flex-tool/master/flex.js
 // ==/UserScript==
 
 
 (function () {
     'use strict';
+
+   $.getScript("https://code.jquery.com/ui/1.12.1/jquery-ui.min.js");
 
     var dates = [];
     var details = [];
@@ -20,6 +22,90 @@
     var daysOff = [];
     var daysOffDates = [];
     var today = new Date();
+    var defaults = loadDefaults();
+    console.log(defaults);
+
+    function loadDefaults() {
+        var usability = localStorage.usability;
+        if (usability) {
+            usability = JSON.parse(usability);
+            if (usability.defaults) {
+                return usability.defaults;
+            } else {
+                return {};
+            }
+        } else {
+            return {};
+        }
+    }
+
+    function hasInvalidShifts() {
+        var validShifts = $("[id$=shiftName]:first").find("option").map(function() { return $(this).attr("value");}).toArray();
+        return $.inArray(defaults.weekday, validShifts) < 0 ||
+            $.inArray(defaults.saturday, validShifts) < 0 ||
+            $.inArray(defaults.sunday, validShifts) < 0;
+    }
+
+    function hasInvalidHours() {
+        var hours = defaults.hours;
+        return hours === undefined || hours < 1 || hours > 12;
+    }
+
+    function checkDefaults() {
+        if (hasInvalidHours() || hasInvalidShifts()) {
+            showDefaultsDialog();
+        }
+        //TODO: add a button to change the defaults.
+        //TODO: actually use the defaults.
+    }
+
+    function copyShift() {
+        return $("[id$=shiftName]:first").find("option").clone();
+    }
+
+    function getHours() {
+        return defaults.hours ? defaults.hours : 8;
+    }
+
+    function showDefaultsDialog() {
+        var $dialog = $("<div title='Set your flex-usability defaults'></div>");
+        var $form = $("<form></form>").appendTo($dialog)
+            .append($("<p>How many hours do you normally work in a day?</p>"))
+            .append($("<input type='number' name='defaultHours'/>").val(getHours()))
+            .append($("<p><br/>Please select your default shift for a weekday</p>"))
+            .append($("<select name='defaultDay'></select>").append(copyShift()))
+            .append($("<p><br/>Please select your default shift for a Saturday</p>"))
+            .append($("<select name='defaultSat'></select>").append(copyShift()))
+            .append($("<p><br/>Please select your default shift for a Sunday/holiday</p>"))
+            .append($("<select name='defaultSun'></select>").append(copyShift()));
+
+        $form.find("[name=defaultDay]").val(defaults.weekday);
+        $form.find("[name=defaultSat]").val(defaults.saturday);
+        $form.find("[name=defaultSun]").val(defaults.sunday);
+
+        $dialog.dialog({
+            modal:true,
+            resizable: false,
+            buttons: {
+                Save: function() {
+                    defaults.hours = parseInt($dialog.find("[name=defaultHours").val(), 10);
+                    defaults.weekday = $dialog.find("[name=defaultDay]").val();
+                    defaults.saturday = $dialog.find("[name=defaultSat]").val();
+                    defaults.sunday = $dialog.find("[name=defaultSun]").val();
+
+                    saveDefaults();
+                    $(this).dialog("close");
+                }
+            }
+        });
+    }
+
+    function saveDefaults() {
+        var usability = {
+            defaults: defaults
+        };
+        localStorage.usability = JSON.stringify(usability);
+    }
 
     function isSunday(date) {
         return date.getDay() === 0;
@@ -28,10 +114,6 @@
     function isSaturday(date) {
         return date.getDay() === 6;
     }
-    
-    $("input[value=Submit]").click(function() {
-     return confirm("I know that I use an external script to fill in my timesheet and have verified that it's correct.");
-    });
 
     $('[id^=billingDtls]')
         .css({'margin-bottom': '10px'})
@@ -60,7 +142,7 @@
         .filter(':odd')
         .css({"background-color": "#DDDDDD"});
 
-    var dateTable = $("<table id='elcSolDateTable'>").insertAfter("table:first")
+    var dateTable = $("<table id='elcSolDateTable'>").insertBefore("table:first")
         .css("width", "250px")
         .css("position", "fixed")
         .css("left", "50px")
@@ -110,10 +192,10 @@
 
         $("<a>").text(date.toLocaleString("en", {day: "2-digit"}))
             .attr("href", "#" + date.toLocaleString("en", {
-                day: "2-digit",
-                month: "2-digit",
-                year: "numeric"
-            }).replace(/\//g, ''))
+                    day: "2-digit",
+                    month: "2-digit",
+                    year: "numeric"
+                }).replace(/\//g, ''))
             .attr("data-date", date.toLocaleString("nl", {
                 month: "2-digit",
                 day: "2-digit",
@@ -144,12 +226,12 @@
 
         if (day === "0") {
             //Saturday
-            $shiftNameSelect.val("OT 200%");
+            $shiftNameSelect.val(defaults.saturday);
         } else if (day === "6") {
             //Sunday
-            $shiftNameSelect.val("OT 150%");
+            $shiftNameSelect.val(defaults.sunday);
         } else {
-            $shiftNameSelect.val("Day Shift (8am - 4pm)");
+            $shiftNameSelect.val(defaults.weekday);
         }
 
         //Hour total
@@ -162,7 +244,8 @@
 
         //Shift
         var $shift = $day.find('select[id^=billingDetailItems]');
-        $shift.val('Day Shift (8am - 4pm)');
+        $shift.val(defaults.weekday);
+
     }
 
     var logDefaults = function () {
@@ -171,19 +254,22 @@
                 var $day = details[i];
                 //Holiday?
                 if (daysOffDates.indexOf(date) < 0) {
-                    logHoursForDay($day, 8);
+                    logHoursForDay($day, defaults.hours);
                 }
             }
         });
     };
 
-    $("<tr>").appendTo(dateTable)
+    var $tr = $("<tr>").appendTo(dateTable)
         .append("<td>")
         .find("td")
-        .attr("colspan", 7)
-        .append("<a>Defaults</a>")
-        .find("a")
-        .click(logDefaults);
+        .attr("colspan", 7);
+
+    $("<a>Fill in defaults</a>").click(logDefaults)
+        .appendTo($tr);
+    $tr.append("<br>");
+    $("<a name='setDefaults'>Change defaults</a>").appendTo($tr)
+        .click(showDefaultsDialog);
 
     $("<tr>").appendTo(dateTable)
         .append("<td>")
@@ -192,4 +278,11 @@
         .append("<label>")
         .append("<span> Log hours</span>")
         .prepend("<input type='checkbox' id='elcSolLogHoursToggle' />");
+
+    //Check if we have all the default settings we need.
+    checkDefaults();
+
+    $("input[value=Submit]").click(function() {
+     return confirm("I know that I use an external script to fill in my timesheet and have verified that it's correct.");
+    });
 })();

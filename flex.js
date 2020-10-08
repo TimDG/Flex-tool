@@ -225,11 +225,11 @@
         var day = $day.attr("detailDay");
 
         if (day === "0") {
-            //Saturday
-            $shiftNameSelect.val(defaults.saturday);
-        } else if (day === "6") {
             //Sunday
             $shiftNameSelect.val(defaults.sunday);
+        } else if (day === "6") {
+            //Saturday
+            $shiftNameSelect.val(defaults.saturday);
         } else {
             $shiftNameSelect.val(defaults.weekday);
         }
@@ -241,11 +241,6 @@
         var $wbs = $day.find('select[id^=cf]');
         var wbsVal = $wbs.find(':last-child').val();
         $wbs.val(wbsVal);
-
-        //Shift
-        var $shift = $day.find('select[id^=billingDetailItems]');
-        $shift.val(defaults.weekday);
-
     }
 
     var logDefaults = function () {

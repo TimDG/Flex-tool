@@ -4,7 +4,7 @@
 // @version      0.1.2
 // @description  try to take over the world!
 // @author       You
-// @match        https://prowand.pro-unlimited.com/worker/standard/billing/billingedit/cntrl_time_create_edit_daily-*.html?*
+// @match        https://prowand.prounlimited.com/worker/standard/billing/billingedit/cntrl_time_create_edit_daily-*.html?*
 // @grant        none
 // @updateUrl    https://cdn.jsdelivr.net/gh/TimDG/Flex-tool@master/flex-oncall.js
 // @downloadUrl  https://cdn.jsdelivr.net/gh/TimDG/Flex-tool@master/flex-oncall.js

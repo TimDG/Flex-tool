@@ -6,8 +6,8 @@
 // @author       You
 // @match        https://prowand.prounlimited.com/worker/standard/billing/billingedit/cntrl_time_create_edit_daily-*.html?*
 // @grant        none
-// @updateUrl    https://cdn.jsdelivr.net/gh/TimDG/Flex-tool@trunk/flex-oncall.js
-// @downloadUrl  https://cdn.jsdelivr.net/gh/TimDG/Flex-tool@trunk/flex-oncall.js
+// @updateUrl    https://cdn.jsdelivr.net/gh/TimDG/Flex-tool@trunk/flex-oncall.user.js
+// @downloadUrl  https://cdn.jsdelivr.net/gh/TimDG/Flex-tool@trunk/flex-oncall.user.js
 // ==/UserScript==
 
 

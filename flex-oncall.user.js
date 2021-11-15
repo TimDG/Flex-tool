@@ -1,10 +1,10 @@
 // ==UserScript==
 // @name         Flex on-call usability
 // @namespace    http://tampermonkey.net/
-// @version      0.1.3
+// @version      0.1.4
 // @description  try to take over the world!
 // @author       You
-// @match        https://prowand.prounlimited.com/worker/standard/billing/billingedit/cntrl_time_create_edit_daily-*.html?*
+// @match        https://prowand.pro-unlimited.com/worker/standard/billing/billingedit/cntrl_time_create_edit_daily-*.html?*
 // @grant        none
 // @updateUrl    https://cdn.jsdelivr.net/gh/TimDG/Flex-tool@trunk/flex-oncall.user.js
 // @downloadUrl  https://cdn.jsdelivr.net/gh/TimDG/Flex-tool@trunk/flex-oncall.user.js

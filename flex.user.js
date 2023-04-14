@@ -1,7 +1,7 @@
 // ==UserScript==
 // @name         ELC Magnit/Flex Helper.
 // @namespace    http://tampermonkey.net/
-// @version      2.0.0
+// @version      1.0.0
 // @description  Make this piece of $@%& usable.
 // @author       You
 // @match        https://prowand.pro-unlimited.com/wand/app/worker/index.html
@@ -9,8 +9,6 @@
 // @grant        none
 // @require      https://cdnjs.cloudflare.com/ajax/libs/jquery/3.6.4/jquery.min.js
 // @require      https://gist.githubusercontent.com/raw/2625891/waitForKeyElements.js
-// @updateUrl    https://cdn.jsdelivr.net/gh/TimDG/Flex-tool@trunk/flex.user.js
-// @downloadUrl  https://cdn.jsdelivr.net/gh/TimDG/Flex-tool@trunk/flex.user.js
 // ==/UserScript==
 
 
@@ -22,14 +20,35 @@
 
 function enterDefault(day, usability) {
     const element = $(day.card);
-    element.find("[formcontrolname='hours']").val(usability.defaults.hours);
-    element.find("[formcontrolname='regularHours']").val(usability.defaults.hours);
+    triggerChange(element.find("[formcontrolname='hours']")
+        .val(usability.defaults.hours));
+    triggerChange(element.find("[formcontrolname='regularHours']")
+        .val(usability.defaults.hours));
 
     const shiftSelect = element.find("[formcontrolname='shift']");
     fillInShift(shiftSelect, getShiftValue(day.date, usability));
+    triggerChange(shiftSelect);
 
-    element.find("[formcontrolname='value']:first()").click();
+    const wbs = element.find("[formcontrolname='value']:first()")
+    wbs.click();
     waitForKeyElements("mat-option.mat-active", (node) => { node.click(); });
+    triggerChange(wbs);
+}
+
+function triggerChange(field) {
+    const event = new Event('input', { bubbles: true });
+    field[0].dispatchEvent(event);
+}
+
+function fillTextField (field, value) {
+//    field.click();
+    field.val(value);
+//    for (const char of value) {
+//        const keyCode = { keyCode: char.charCodeAt(0) };
+//        field.trigger($.Event('keydown', keyCode));
+//        field.trigger($.Event('keyup', keyCode));
+//    }
+    field.trigger('input' );
 }
 
 function getShiftValue(date, usability) {

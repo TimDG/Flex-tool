@@ -9,6 +9,8 @@
 // @grant        none
 // @require      https://cdnjs.cloudflare.com/ajax/libs/jquery/3.6.4/jquery.min.js
 // @require      https://gist.githubusercontent.com/raw/2625891/waitForKeyElements.js
+// @updateUrl    https://cdn.jsdelivr.net/gh/TimDG/Flex-tool@trunk/flex.user.js
+// @downloadUrl  https://cdn.jsdelivr.net/gh/TimDG/Flex-tool@trunk/flex.user.js
 // ==/UserScript==
 
 

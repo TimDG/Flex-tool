@@ -1,7 +1,7 @@
 // ==UserScript==
 // @name         ELC Magnit/Flex Helper.
 // @namespace    http://tampermonkey.net/
-// @version      1.0.0
+// @version      2.0.0
 // @description  Make this piece of $@%& usable.
 // @author       You
 // @match        https://prowand.pro-unlimited.com/wand/app/worker/index.html
@@ -19,17 +19,21 @@
 })();
 
 function enterDefault(day, usability) {
+    enterHoursForDay(day, usability.defaults.hours, usability);
+}
+
+function enterHoursForDay(day, hours, usability) {
     const element = $(day.card);
     triggerChange(element.find("[formcontrolname='hours']")
-        .val(usability.defaults.hours));
+        .val(hours));
     triggerChange(element.find("[formcontrolname='regularHours']")
-        .val(usability.defaults.hours));
+        .val(hours));
 
     const shiftSelect = element.find("[formcontrolname='shift']");
     fillInShift(shiftSelect, getShiftValue(day.date, usability));
     triggerChange(shiftSelect);
 
-    const wbs = element.find("[formcontrolname='value']:first()")
+    const wbs = element.find("[formcontrolname='value']:first()");
     wbs.click();
     waitForKeyElements("mat-option.mat-active", (node) => { node.click(); });
     triggerChange(wbs);
@@ -38,17 +42,6 @@ function enterDefault(day, usability) {
 function triggerChange(field) {
     const event = new Event('input', { bubbles: true });
     field[0].dispatchEvent(event);
-}
-
-function fillTextField (field, value) {
-//    field.click();
-    field.val(value);
-//    for (const char of value) {
-//        const keyCode = { keyCode: char.charCodeAt(0) };
-//        field.trigger($.Event('keydown', keyCode));
-//        field.trigger($.Event('keyup', keyCode));
-//    }
-    field.trigger('input' );
 }
 
 function getShiftValue(date, usability) {

@@ -42,7 +42,6 @@ function enterHoursForDay(day, hours) {
     waitForKeyElements("mat-option.mat-active", (node) => { node.click(); });
     triggerChange(wbs);
 
-    updateSideNav();
 //    setTimeout(updateSideNav, 100);
 }
 
@@ -120,11 +119,15 @@ function updateSideNavCard(navCard) {
                 right: '0',
                 'font-size': '15px'
             })
+            .data('usability', {
+                'date': date
+            })
             .on('click', function() {
                 const card = dateCards.filter(card => card.date.getDate() === date.getDate())[0];
                 const hours = prompt("How many hours have you worked?");
                 if (hours != null) {
                     enterHoursForDay(card, hours);
+                    updateSideNav();
                 }
             });
         $(navCard)
@@ -156,4 +159,5 @@ function fillInDefaults() {
     $.each(workDays, function(index, day) {
         enterDefault(day);
     });
+    updateSideNav();
 }

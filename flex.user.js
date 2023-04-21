@@ -19,6 +19,7 @@ var dateCards;
 (function() {
     'use strict';
 
+    //Wait until the UI is ready.
     waitForKeyElements("#submit-time-btn", loadTimeSheets);
 })();
 
@@ -38,13 +39,13 @@ function enterHoursForDay(day, hours) {
     triggerChange(shiftSelect);
 
     const wbs = element.find("[formcontrolname='value']:first()");
+    //Yay, we need to simulate clicks. What could go wrong there?
     wbs.click();
     waitForKeyElements("mat-option.mat-active", (node) => { node.click(); });
     triggerChange(wbs);
-
-//    setTimeout(updateSideNav, 100);
 }
 
+//Make sure angular knows the field is changed, so it also posts the new info.
 function triggerChange(field) {
     const event = new Event('input', { bubbles: true });
     field[0].dispatchEvent(event);
@@ -59,12 +60,9 @@ function getShiftValue(date) {
 }
 
 function fillInShift(element, shift) {
+    //More clicks!!!
     element[0].click();
-    waitForKeyElements("span.mat-option-text:contains('" + shift + "')", selectShift );
-}
-
-function selectShift(node) {
-    node.click();
+    waitForKeyElements("span.mat-option-text:contains('" + shift + "')", (node) => node.click() );
 }
 
 function loadTimeSheets() {
@@ -98,6 +96,7 @@ function loadTimeSheets() {
 }
 
 function updateSideNav() {
+    //Only do this on the ones we haven't processed yet.
     $("#workday-sidenav li").not('.usability-touched').each(function() {
         updateSideNavCard($(this)[0]);
     });
@@ -109,7 +108,7 @@ function updateSideNavCard(navCard) {
         var date = new Date(+dateParts[2], dateParts[0] - 1, +dateParts[1]);
         $(navCard).contents()[0].textContent = ' ' + dateParts[1] + '/' + dateParts[0] + '/' + dateParts[2] + ' ';
 
-        //Add the edit icon.
+        //Add the edit icon (and make it useful)
         const matIcon = $('<mat-icon>')
             .text('edit')
             .addClass('mat-icon notranslate material-icons mat-ligature-font mat-icon-no-color')
@@ -118,9 +117,6 @@ function updateSideNavCard(navCard) {
                 top: '50%',
                 right: '0',
                 'font-size': '15px'
-            })
-            .data('usability', {
-                'date': date
             })
             .on('click', function() {
                 const card = dateCards.filter(card => card.date.getDate() === date.getDate())[0];
@@ -142,6 +138,7 @@ function getDate(dateCard) {
     return new Date(+dateParts[2], dateParts[0] - 1, +dateParts[1]);
 }
 
+//No need to log hours on weekend days or holidays.
 function shouldLogHours(date, cardElement) {
     const dayOfWeek = date.getDay();
     const isWeekend = dayOfWeek === 6 || dayOfWeek === 0;

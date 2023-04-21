@@ -14,6 +14,7 @@
 // ==/UserScript==
 
 const usability = JSON.parse(localStorage.usability);
+var dateCards;
 
 (function() {
     'use strict';
@@ -40,6 +41,9 @@ function enterHoursForDay(day, hours) {
     wbs.click();
     waitForKeyElements("mat-option.mat-active", (node) => { node.click(); });
     triggerChange(wbs);
+
+    updateSideNav();
+//    setTimeout(updateSideNav, 100);
 }
 
 function triggerChange(field) {
@@ -66,9 +70,8 @@ function selectShift(node) {
 
 function loadTimeSheets() {
     //Get all date cards
-    var dateCards = $("div[id^='scrollSpy']")
-    console.log(dateCards);
-    dateCards = dateCards.map(function(index, element) {
+    var cards = $("div[id^='scrollSpy']")
+    dateCards = cards.map(function(index, element) {
         const date = getDate(element);
         return {
             card: element,
@@ -76,7 +79,6 @@ function loadTimeSheets() {
             logHours: shouldLogHours(date, element)
         };
     }).get()
-    console.log(dateCards);
 
     // Create the new button element
     const fillDefaults = $('<button>', {
@@ -90,14 +92,23 @@ function loadTimeSheets() {
 
     // Insert the new button next to the button with id 'btn-submit'
     $('#submit-time-btn').before(fillDefaults);
-    fillDefaults.click(() => fillInDefaults(dateCards));
+    fillDefaults.click(() => fillInDefaults());
 
     //Update the day buttons on the left.
-    $("#workday-sidenav li").each(function() {
+    updateSideNav();
+}
+
+function updateSideNav() {
+    $("#workday-sidenav li").not('.usability-touched').each(function() {
+        updateSideNavCard($(this)[0]);
+    });
+}
+
+function updateSideNavCard(navCard) {
         //Fix the date.
-        var dateParts = $(this).contents()[0].textContent.trim().split("/");
+        var dateParts = $(navCard).contents()[0].textContent.trim().split("/");
         var date = new Date(+dateParts[2], dateParts[0] - 1, +dateParts[1]);
-        $(this).contents()[0].textContent = ' ' + dateParts[1] + '/' + dateParts[0] + '/' + dateParts[2] + ' ';
+        $(navCard).contents()[0].textContent = ' ' + dateParts[1] + '/' + dateParts[0] + '/' + dateParts[2] + ' ';
 
         //Add the edit icon.
         const matIcon = $('<mat-icon>')
@@ -116,12 +127,12 @@ function loadTimeSheets() {
                     enterHoursForDay(card, hours);
                 }
             });
-        $(this)
+        $(navCard)
             .css('position', 'relative')
+            .addClass('usability-touched')
             .append(matIcon);
 
-    });
-}
+    }
 
 function getDate(dateCard) {
     const dateParts = $(dateCard).find(".date").text().split("/");
@@ -139,8 +150,8 @@ function isHoliday(cardElement) {
     return $(cardElement).find('.holiday-warning-banner').length > 0;
 }
 
-function fillInDefaults(cards) {
-    const workDays = cards.filter(card => card.logHours);
+function fillInDefaults() {
+    const workDays = dateCards.filter(card => card.logHours);
 
     $.each(workDays, function(index, day) {
         enterDefault(day);

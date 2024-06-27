@@ -1,7 +1,7 @@
 // ==UserScript==
 // @name         ELC Magnit/Flex Helper.
 // @namespace    http://tampermonkey.net/
-// @version      2.0.0
+// @version      2.1.0
 // @description  Make this piece of $@%& usable.
 // @author       You
 // @match        https://prowand.pro-unlimited.com/wand/app/worker/index.html
@@ -38,11 +38,11 @@ function enterHoursForDay(day, hours) {
     fillInShift(shiftSelect, getShiftValue(day.date));
     triggerChange(shiftSelect);
 
-    const wbs = element.find("[formcontrolname='value']:first()");
+    const costCenter = element.find("[formcontrolname='value']:eq(2)");
     //Yay, we need to simulate clicks. What could go wrong there?
-    wbs.click();
+    costCenter.click();
     waitForKeyElements("mat-option.mat-active", (node) => { node.click(); });
-    triggerChange(wbs);
+    triggerChange(costCenter);
 }
 
 //Make sure angular knows the field is changed, so it also posts the new info.

@@ -1,7 +1,7 @@
 // ==UserScript==
 // @name         ELC Magnit/Flex Helper.
 // @namespace    http://tampermonkey.net/
-// @version      2.1.0
+// @version      2.1.1
 // @description  Make this piece of $@%& usable.
 // @author       You
 // @match        https://prowand.pro-unlimited.com/wand/app/worker/index.html
@@ -21,6 +21,7 @@ var dateCards;
 
     //Wait until the UI is ready.
     waitForKeyElements("#submit-time-btn", loadTimeSheets);
+    alert("The flex-tool addon will be removed soon. If you're still using it, please fork it and continue development there.")
 })();
 
 function enterDefault(day) {
